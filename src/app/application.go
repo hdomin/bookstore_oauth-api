@@ -12,10 +12,10 @@ var (
 )
 
 func StartApplication() {
-	atService := accesstoken.NewService(db.NewRepository())
-	atHandler := http.NewHandler(atService)
+	atHandler := http.NewHandler(accesstoken.NewService(db.NewRepository()))
 
 	router.GET("/oauth/access_token/:access_token", atHandler.GetById)
+	router.POST("/oauth/access_token", atHandler.Create)
 
 	router.Run(":8080")
 }

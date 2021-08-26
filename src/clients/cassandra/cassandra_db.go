@@ -5,18 +5,21 @@ import (
 )
 
 var (
-	cluster *gocql.ClusterConfig
+	session *gocql.Session
 )
 
 func init() {
 	// connect to Cassandra cluster
-	tmp := gocql.NewCluster("cassandra")
-	tmp.Keyspace = "oauth"
-	tmp.Consistency = gocql.Quorum
+	cluster := gocql.NewCluster("cassandra")
+	cluster.Keyspace = "oauth"
+	cluster.Consistency = gocql.Quorum
 
-	cluster = tmp
+	var err error
+	if session, err = cluster.CreateSession(); err != nil {
+		panic(err)
+	}
 }
 
-func GetSession() (*gocql.Session, error) {
-	return cluster.CreateSession()
+func GetSession() *gocql.Session {
+	return session
 }
